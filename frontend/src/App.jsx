@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 
-import Header from "./components/Header";
-import CardInicial from "./components/CardInicial";
-import Cadastro from "./pages/Cadastro";
+import Header from '../src/components/Header'
+import CardInicial from "../src/components/CardInicial";
+import Cadastro from '../src/pages/Cadastro'
 
 export default function App() {
   return (
