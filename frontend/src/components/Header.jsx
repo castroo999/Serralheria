@@ -1,23 +1,25 @@
 import "./Header.css";
 import { Link } from "react-router-dom";
 import img from "../assets/img-header.png";
+import { useState } from "react";
 
 export default function Header() {
+  const [usuario] = useState(localStorage.getItem("user") || "");
+
   return (
     <>
-      
       <div className="navbar">
         <h2>INOVE SERRALHERIA</h2>
 
         <nav>
-          <Link to="/">HOME</Link>
+          <Link to="/home">HOME</Link>
           <Link to="/servicos">SERVIÇOS</Link>
           <Link to="/orcamentos">ORÇAMENTOS</Link>
-          <Link to="/contato">CONTATO</Link>
         </nav>
+
+        {usuario && <p className="user">User: {usuario}</p>}
       </div>
 
-      
       <div className="header">
         <div className="header-texto">
           <h1>INOVE SERRALHERIA</h1>
