@@ -68,15 +68,18 @@ async function verificarToken(request, reply) {
 
 
 //criar um novo orçamento
-server.post('/orcamentos', async (request, reply) => {
+server.post('/orcamentos', { preHandler: verificarToken }, async (request, reply) => {
   const { title, description, cliente, tel } = request.body;
 
   //cria um id aleatorio unico
   const id = randomUUID();
 
+  //salvar token usuaio
+  const user_id = request.user.id;
+
   await db.run(
-    "INSERT INTO orcamentos (id, title, description, cliente, tel) VALUES (?, ?, ?, ?, ?)",
-    [id, title, description, cliente, tel]
+    "INSERT INTO orcamentos (id, title, description, cliente, tel, user_id) VALUES (?, ?, ?, ?, ?, ?)",
+    [id, title, description, cliente, tel, user_id]
   );
 
   return reply.status(201).send();
@@ -105,7 +108,7 @@ server.post('/registrar', async (request, reply)=>{
     }
 
     //define role 
-    const role = user === "admin" ? "admin" : "user";
+    const role = "user"
 
     //criptografa a senha
     const hash = await bcrypt.hash(password, 10)
@@ -170,6 +173,9 @@ server.post('/login', async (request, reply)=>{
       {expiresIn: "1h"}
     );
 
+    //retonna o token do usuario logado
+    console.log(token);
+
     return reply.send({token});
   }
 
@@ -182,11 +188,22 @@ server.post('/login', async (request, reply)=>{
 
 
 //mostrar os orçamentos registrados
-server.get('/orcamentos', { preHandler: verificarToken }, async () => {
-  const orcamentos = await db.all("SELECT * FROM orcamentos");
-  return (orcamentos);
-});
+server.get('/orcamentos', { preHandler: verificarToken }, async (request, reply) => {
 
+  // se for admin ve todos
+  if (request.user.role === "admin") {
+    const orcamentos = await db.all("SELECT * FROM orcamentos");
+    return orcamentos;
+  }
+
+  // se o usuario for normal so pode ver os orçamentos dele
+  const orcamentos = await db.all(
+    "SELECT * FROM orcamentos WHERE user_id = ?",
+    [request.user.id]
+  );
+
+  return orcamentos;
+});
 
 //editar um orçamento selecionado pelo id dele só adm
 server.put('/orcamentos/:id', { preHandler: verificarToken }, async (request, reply) => {

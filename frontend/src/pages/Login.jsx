@@ -1,4 +1,3 @@
-
 import api from "../services/Api.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -6,20 +5,17 @@ import { useNavigate } from "react-router-dom";
 export default function Login() {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   async function login(e) {
     e.preventDefault();
 
-    //nao deixa o usuario nao preencher todos os campos
     if (!user || !password) {
       alert("Preencha todos os campor por favor!");
       return;
     }
 
-
     try {
-      //espera a requisição da api
       const response = await api.post("/login", {
         user,
         password,
@@ -30,17 +26,20 @@ export default function Login() {
 
       //salva o token
       localStorage.setItem("token", token);
-      //salva o user
-      localStorage.setItem("user", user);
-      navigate("/home")
 
-      alert(`Bem vindo ${user}`);
+      // decodifica o token
+      const decoded = JSON.parse(atob(token.split(".")[1]));
+
+      //salva dados do usuário
+      localStorage.setItem("user", JSON.stringify(decoded));
+
+      navigate("/home");
 
       //limpa os campos
       setUser("");
       setPassword("");
-    } 
-    catch (error) {
+
+    } catch (error) {
       console.log("USER DIGITADO:", user);
       console.error(error.response?.data || error.message);
       alert("Erro ao fazer login");

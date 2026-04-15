@@ -4,7 +4,10 @@ import img from "../assets/img-header.png";
 import { useState } from "react";
 
 export default function Header() {
-  const [usuario] = useState(localStorage.getItem("user") || "");
+  const [usuario] = useState(() => {
+    const user = localStorage.getItem("user");
+    return user ? JSON.parse(user) : null;
+  });
 
   return (
     <>
@@ -15,9 +18,10 @@ export default function Header() {
           <Link to="/home">HOME</Link>
           <Link to="/servicos">SERVIÇOS</Link>
           <Link to="/orcamentos">ORÇAMENTOS</Link>
+          <Link to="/ver_orcamentos">VER ORÇAMENTOS</Link>
         </nav>
 
-        {usuario && <p className="user">User: {usuario}</p>}
+        {usuario && <p className="user">User: {usuario.user}</p>}
       </div>
 
       <div className="header">
