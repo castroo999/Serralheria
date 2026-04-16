@@ -30,8 +30,14 @@ export default function Login() {
       // decodifica o token
       const decoded = JSON.parse(atob(token.split(".")[1]));
 
-      //  salva o nome
-      localStorage.setItem("user", decoded.user);
+      // salva token e user
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          user: decoded.user,
+          role: decoded.role,
+        }),
+      );
 
       alert("Login realizado com sucesso!");
 
@@ -40,7 +46,6 @@ export default function Login() {
       // limpa os campos
       setUser("");
       setPassword("");
-
     } catch (error) {
       console.log("USER DIGITADO:", user);
       console.error(error.response?.data || error.message);

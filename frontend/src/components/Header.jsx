@@ -1,13 +1,28 @@
 import "./Header.css";
 import { Link } from "react-router-dom";
 import img from "../assets/img-header.png";
-import { useState } from "react";
 
 export default function Header() {
-  const [usuario] = useState(() => {
-    const userStorage = localStorage.getItem("user");
-    return userStorage ? JSON.parse(userStorage) : null;
-  });
+
+  function getUser() {
+    try {
+      const user = localStorage.getItem("user");
+
+      if (!user) return null;
+
+      const parsed = JSON.parse(user);
+
+      if (typeof parsed === "object" && parsed.user) {
+        return parsed;
+      }
+
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  const usuario = getUser();
 
   return (
     <>
@@ -21,7 +36,11 @@ export default function Header() {
           <Link to="/ver_orcamentos">VER ORÇAMENTOS</Link>
         </nav>
 
-        {usuario && <p className="user">User: {usuario.user}</p>}
+        {usuario && (
+          <p className="user">
+            User: {usuario.user}
+          </p>
+        )}
       </div>
 
       <div className="header">

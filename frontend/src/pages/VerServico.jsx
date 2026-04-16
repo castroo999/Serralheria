@@ -33,52 +33,11 @@ export default function VerServico() {
     }
   }
 
-  // const [modalAberto, setModalAberto] = useState(false);
-  // const [editandoId, setEditandoId] = useState(null);
-  // const [title, setTitle] = useState("");
-  // const [description, setDescription] = useState("");
-  // const [cliente, setCliente] = useState("");
-  // const [tel, setTel] = useState("");
-
-  // //função do modal
-  // function abrirModal(item) {
-  //   setEditandoId(item.id);
-  //   setTitle(item.title);
-  //   setDescription(item.description);
-  //   setCliente(item.cliente);
-  //   setTel(item.tel);
-
-  //   setModalAberto(true);
-  // }
-
-  // function fecharModal() {
-  //   setModalAberto(false);
-  //   setEditandoId(null);
-  // }
-
-  // async function editar() {
-  //   try {
-  //     await api.put(`/orcamentos/${editandoId}`, {
-  //       title,
-  //       description,
-  //       cliente,
-  //       tel,
-  //     });
-
-  //     // atualiza lista
-  //     setOrcamentos(
-  //       orcamentos.map((item) => item.id === editandoId ? { ...item, title, description, cliente, tel } : item));
-  //     fecharModal();
-  //   }
-  //   catch (error) {
-  //     console.log(error);
-  //     alert("Erro ao editar!");
-  //   }
-  // }
 
   return (
     <div className="container2">
       <div className="listados">
+        <h2>Orçamentos</h2>
         <ul>
           {/* mapeia os orçamentos */}
           {orcamentos.map((item) => (
