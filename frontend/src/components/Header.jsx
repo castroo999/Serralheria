@@ -5,8 +5,8 @@ import { useState } from "react";
 
 export default function Header() {
   const [usuario] = useState(() => {
-    const user = localStorage.getItem("user");
-    return user ? JSON.parse(user) : null;
+    const userStorage = localStorage.getItem("user");
+    return userStorage ? JSON.parse(userStorage) : null;
   });
 
   return (

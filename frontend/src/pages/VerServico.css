@@ -1,0 +1,64 @@
+.container2 {
+  display: flex;
+  margin-top: 60px;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+  background-color: #801212;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.listados {
+  font-family: 'Poppins', sans-serif;
+  background-color: rgba(255, 255, 255, 0.9);
+  width: 260px;
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.listados ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.listados ul li {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.listados h3 {
+  font-size: 16px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.botoes {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.listados button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 25px;
+  border: none;
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  color: #fff;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.listados button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+

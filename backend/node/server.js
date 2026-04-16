@@ -33,12 +33,16 @@ await db.exec(`
   )  
 `)
 
+await db.exec(`UPDATE user SET role = 'admin' WHERE user = 'admin'`)
+
 
 //cria o banco de dados SQLITE
 const banco = new database()
 
 await server.register(cors, {
   origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 });
 
 
@@ -227,12 +231,15 @@ server.put('/orcamentos/:id', { preHandler: verificarToken }, async (request, re
 //deletar um orçamento pelo id dele só adm pode
 server.delete('/orcamentos/:id', { preHandler: verificarToken }, async (request, reply) => {
 
+  //so adm pode deletar
   if (request.user.role !== "admin") {
     return reply.status(403).send({ error: "Apenas admin pode deletar" });
   }
 
+  //pega o id do user
   const { id } = request.params;
 
+  //deleta pelo id do orçamento
   await db.run(
     "DELETE FROM orcamentos WHERE id = ?",
     [id]

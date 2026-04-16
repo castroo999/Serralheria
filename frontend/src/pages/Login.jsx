@@ -11,7 +11,7 @@ export default function Login() {
     e.preventDefault();
 
     if (!user || !password) {
-      alert("Preencha todos os campor por favor!");
+      alert("Preencha todos os campos por favor!");
       return;
     }
 
@@ -21,21 +21,23 @@ export default function Login() {
         password,
       });
 
-      //pega o token
+      // pega o token
       const token = response.data.token;
 
-      //salva o token
+      // salva o token
       localStorage.setItem("token", token);
 
       // decodifica o token
       const decoded = JSON.parse(atob(token.split(".")[1]));
 
-      //salva dados do usuário
-      localStorage.setItem("user", JSON.stringify(decoded));
+      //  salva o nome
+      localStorage.setItem("user", decoded.user);
+
+      alert("Login realizado com sucesso!");
 
       navigate("/home");
 
-      //limpa os campos
+      // limpa os campos
       setUser("");
       setPassword("");
 
@@ -50,19 +52,23 @@ export default function Login() {
     <div className="container">
       <div className="login">
         <h2>Bem vindo, faça login para continuar!</h2>
+
         <form onSubmit={login}>
           <input
             placeholder="Login"
             value={user}
             onChange={(e) => setUser(e.target.value)}
           />
+
           <input
             type="password"
             placeholder="Senha"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button>Entrar</button>
+
+          <button type="submit">Entrar</button>
+
           <p>
             Não tem conta? <a href="/cadastro">Cadastre-se</a>
           </p>
