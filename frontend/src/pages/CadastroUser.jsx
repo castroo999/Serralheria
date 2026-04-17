@@ -1,10 +1,12 @@
 
 import api from "../services/Api.js";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Cadastro() {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate()
 
   async function registrar(e) {
     e.preventDefault();
@@ -29,6 +31,7 @@ export default function Cadastro() {
       //limpa os campos
       setUser("");
       setPassword("");
+      navigate("/")
 
     } catch (error) {
       console.error(error.response?.data || error.message);

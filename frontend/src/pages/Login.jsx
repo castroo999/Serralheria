@@ -1,6 +1,8 @@
 import api from "../services/Api.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./Cadastro.css"
+import "./Login.css"
 
 export default function Login() {
   const [user, setUser] = useState("");
@@ -39,7 +41,7 @@ export default function Login() {
         }),
       );
 
-      alert("Login realizado com sucesso!");
+      
 
       navigate("/home");
 
@@ -74,7 +76,7 @@ export default function Login() {
 
           <button type="submit">Entrar</button>
 
-          <p>
+          <p className="cadastrar">
             Não tem conta? <a href="/cadastro">Cadastre-se</a>
           </p>
         </form>

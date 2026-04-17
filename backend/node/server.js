@@ -19,7 +19,8 @@ await db.exec(`
     title TEXT,
     description TEXT,
     cliente TEXT,
-    tel TEXT 
+    tel TEXT
+    user_id TEXT
   )
 `);
 
@@ -32,8 +33,6 @@ await db.exec(`
   role TEXT
   )  
 `)
-
-await db.exec(`UPDATE user SET role = 'admin' WHERE user = 'admin'`)
 
 
 //cria o banco de dados SQLITE

@@ -1,28 +1,44 @@
 import "./Header.css";
 import { Link } from "react-router-dom";
 import img from "../assets/img-header.png";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function Header() {
 
   function getUser() {
     try {
+      //pega o user logado salvo no local storage
       const user = localStorage.getItem("user");
 
+      //se nao tiver nao muda nda
       if (!user) return null;
 
+      //transforma so o nome do usuario em JSON
       const parsed = JSON.parse(user);
 
+      //retona o user
       if (typeof parsed === "object" && parsed.user) {
         return parsed;
       }
 
       return null;
-    } catch {
+    }
+    catch {
       return null;
     }
   }
 
-  const usuario = getUser();
+  const [usuario, setUsuario] = useState(getUser());
+  const navigate = useNavigate()
+
+  function sair(){
+    localStorage.clear()
+    setUsuario(null)
+    navigate("/")
+  }
+
+  
 
   return (
     <>
@@ -37,10 +53,12 @@ export default function Header() {
         </nav>
 
         {usuario && (
-          <p className="user">
+          <span className="user">
             User: {usuario.user}
-          </p>
+          </span>
         )}
+
+        <button onClick={sair}>Sair</button>
       </div>
 
       <div className="header">

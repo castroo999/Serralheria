@@ -7,6 +7,12 @@
   background-color: #801212;
   gap: 20px;
   flex-wrap: wrap;
+  & h2{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
 }
 
 .listados {
@@ -32,10 +38,10 @@
   font-size: 14px;
 }
 
-.listados h3 {
-  font-size: 16px;
-  display: block;
-  margin-bottom: 5px;
+.listados span {
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  margin-bottom: 10px;
 }
 
 .botoes {
@@ -62,3 +68,45 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
+.overlay2 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  background: #801212;
+  padding: 20px;
+  gap: 20px;
+  border-radius: 10px;
+  width: 350px;
+  max-width: 90%;
+  color: #fff;
+}
+
+.modal input {
+  padding: 14px;
+  border-radius: 30px;
+  border: none;
+  outline: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.modal input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.modal input:focus {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.02);
+}
