@@ -10,7 +10,6 @@ import "dotenv/config";
 //mini freamework do node.js
 const server = fastify()
 
-
 //conecta o banco de dados com o node.js aq no vs code
 const db = await connectDB();
 await db.exec(`
@@ -19,10 +18,13 @@ await db.exec(`
     title TEXT,
     description TEXT,
     cliente TEXT,
-    tel TEXT
-    user_id TEXT
+    tel TEXT,
+    user_id TEXT,
+    status TEXT DEFAULT 'pendente'
   )
 `);
+
+
 
 //cria a tabela usuarios
 await db.exec(`
@@ -34,13 +36,14 @@ await db.exec(`
   )  
 `)
 
+// await db.exec(`DELETE FROM user WHERE id = 'a90c7bd4-e012-4e1f-a07f-30e2e63174bb'`);
 
 //cria o banco de dados SQLITE
 const banco = new database()
 
 await server.register(cors, {
   origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 });
 
@@ -72,31 +75,35 @@ async function verificarToken(request, reply) {
 
 //criar um novo orçamento
 server.post('/orcamentos', { preHandler: verificarToken }, async (request, reply) => {
-  const { title, description, cliente, tel } = request.body;
+  try {
+    const { title, description, cliente, tel } = request.body;
 
-  //cria um id aleatorio unico
-  const id = randomUUID();
+    const id = randomUUID();
+    const user_id = request.user.id;
+    const status = "pendente";
 
-  //salvar token usuaio
-  const user_id = request.user.id;
+    await db.run(
+      "INSERT INTO orcamentos (id, title, description, cliente, tel, user_id, status) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [id, title, description, cliente, tel, user_id, status]
+    );
 
-  await db.run(
-    "INSERT INTO orcamentos (id, title, description, cliente, tel, user_id) VALUES (?, ?, ?, ?, ?, ?)",
-    [id, title, description, cliente, tel, user_id]
-  );
+    return reply.status(201).send();
 
-  return reply.status(201).send();
+  } catch (error) {
+    console.log("ERRO REAL:", error);
+    return reply.status(500).send({ error: "Erro ao criar orçamento" });
+  }
 });
 
 
 //registar um usuario
-server.post('/registrar', async (request, reply)=>{
-  try{
-    const {user , password} = request.body
+server.post('/registrar', async (request, reply) => {
+  try {
+    const { user, password } = request.body
 
     //verifica se a senha ta certa
-    if(!user || !password){
-      return reply.status(400).send ({error:"preencha todos os campos!"});
+    if (!user || !password) {
+      return reply.status(400).send({ error: "preencha todos os campos!" });
     }
 
     //verifica usuario
@@ -106,8 +113,8 @@ server.post('/registrar', async (request, reply)=>{
     );
 
     //evita usuario duplicado
-    if (existe){
-      return reply.status(400).send ({error:"Usuario digitado ja existe"})
+    if (existe) {
+      return reply.status(400).send({ error: "Usuario digitado ja existe" })
     }
 
     //define role 
@@ -124,26 +131,26 @@ server.post('/registrar', async (request, reply)=>{
     );
 
     //se tudo der certo retorna isso
-    return reply.status(201).send({message: "Usuario cadastrado com susseso!"})
+    return reply.status(201).send({ message: "Usuario cadastrado com susseso!" })
 
   }
 
   //se alguma coisa dar errado retorna isso
-  catch(error){
+  catch (error) {
     console.log(error)
-    return reply.status(500).send({error:"Erro no servidor :( "})
+    return reply.status(500).send({ error: "Erro no servidor :( " })
   }
 });
 
 
 //cria a rota login de usuario
-server.post('/login', async (request, reply)=>{
-  try{
-    const {user, password} = request.body
+server.post('/login', async (request, reply) => {
+  try {
+    const { user, password } = request.body
 
     //se o usuario nao colocar senha ou o nome dele da erro
-    if (!user || !password){
-      return reply.status(400).send({error:"Preencha todos os campos!"})
+    if (!user || !password) {
+      return reply.status(400).send({ error: "Preencha todos os campos!" })
     };
 
     //seleciona o usuario novo
@@ -153,16 +160,16 @@ server.post('/login', async (request, reply)=>{
     );
 
     //se nao achar da esse erro
-    if(!usuario){
-      return reply.status(404).send({error:"Usuario não encontrado"})
+    if (!usuario) {
+      return reply.status(404).send({ error: "Usuario não encontrado" })
     };
 
     //criptografa a senha do usaurio
     const senhaCorreta = await bcrypt.compare(password, usuario.password);
 
     //se a senha estiver errada da esse erro
-    if(!senhaCorreta){
-      return reply.status(401).send({error:"Senha Incorreta"})
+    if (!senhaCorreta) {
+      return reply.status(401).send({ error: "Senha Incorreta" })
     };
 
     //cria o token
@@ -173,19 +180,19 @@ server.post('/login', async (request, reply)=>{
         role: usuario.role
       },
       process.env.JWT_SECRET,
-      {expiresIn: "1h"}
+      { expiresIn: "1h" }
     );
 
     //retonna o token do usuario logado
     console.log(token);
 
-    return reply.send({token});
+    return reply.send({ token });
   }
 
   //se alguma coisa der errado da isso
-  catch(error){
+  catch (error) {
     console.log(error)
-    return reply.status(500).send({error:"Erro no servidor :( "})
+    return reply.status(500).send({ error: "Erro no servidor :( " })
   }
 })
 
@@ -216,11 +223,11 @@ server.put('/orcamentos/:id', { preHandler: verificarToken }, async (request, re
   }
 
   const { id } = request.params;
-  const { title, description, cliente, tel} = request.body;
+  const { title, description, cliente, tel, status } = request.body;
 
   await db.run(
-    "UPDATE orcamentos SET title = ?, description = ?, cliente = ? , tel = ? WHERE id = ?",
-    [title, description, cliente, tel, id]
+    "UPDATE orcamentos SET title = ?, description = ?, cliente = ?, tel = ?, status = ? WHERE id = ?",
+    [title, description, cliente, tel, status, id]
   );
 
   return reply.status(204).send();
@@ -245,10 +252,10 @@ server.delete('/orcamentos/:id', { preHandler: verificarToken }, async (request,
   );
 
   return reply.status(204).send();
-}); 
+});
 
 
 //porta do servidor
 server.listen({
-    port: process.env.PORT || 3000,
+  port: process.env.PORT || 3000,
 })

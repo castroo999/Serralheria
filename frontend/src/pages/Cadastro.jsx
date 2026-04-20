@@ -8,6 +8,7 @@ export default function Cadastro() {
   const [cliente, setCliente] = useState("");
   const [tel, setTel] = useState("");
 
+
   async function enviar(e) {
     e.preventDefault();
 
@@ -35,7 +36,8 @@ export default function Cadastro() {
       setCliente("");
       setTel("");
 
-    } catch (error) {
+    }
+    catch (error) {
       console.error(error);
       alert("Erro ao enviar orçamento");
     }
@@ -47,25 +49,25 @@ export default function Cadastro() {
         <h1>Solicite seu Orçamento</h1>
 
         <input
-          placeholder="Título"
+          placeholder="Título:"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
 
         <input
-          placeholder="Descrição"
+          placeholder="Descrição:"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
 
         <input
-          placeholder="Cliente"
+          placeholder="Cliente:"
           value={cliente}
           onChange={(e) => setCliente(e.target.value)}
         />
 
         <input
-          placeholder="Telefone"
+          placeholder="Telefone:"
           value={tel}
           onChange={(e) => setTel(e.target.value)}
         />

@@ -42,7 +42,7 @@ export default function Login() {
       );
 
       
-
+      //dps de logar leva pra home
       navigate("/home");
 
       // limpa os campos

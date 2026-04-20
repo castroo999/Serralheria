@@ -37,6 +37,7 @@ export default function VerServico() {
   const [description, setDescription] = useState("");
   const [cliente, setCliente] = useState("");
   const [tel, setTel] = useState("");
+  const [status, setStatus] = useState("");
 
   //  ABRIR MODAL
   function abrirModal(item) {
@@ -45,6 +46,7 @@ export default function VerServico() {
     setDescription(item.description);
     setCliente(item.cliente);
     setTel(item.tel);
+    setStatus(item.status);
     setModalAberto(true);
   }
 
@@ -62,13 +64,14 @@ export default function VerServico() {
         description,
         cliente,
         tel,
+        status,
       });
 
       // atualiza lista sem reload
       setOrcamentos((prev) =>
         prev.map((item) =>
           item.id === editandoId
-            ? { ...item, title, description, cliente, tel }
+            ? { ...item, title, description, cliente, tel, status }
             : item,
         ),
       );
@@ -83,14 +86,26 @@ export default function VerServico() {
   return (
     <div className="container2">
       <div className="listados">
-          <span>Orçamentos Registrados!</span>
+        <span>Orçamentos Registrados!</span>
         <ul>
           {orcamentos.map((item) => (
             <li key={item.id}>
               <h3>TITULO: {item.title}</h3>
-              <p><strong>DESCRIÇÃO:</strong> {item.description}</p>
-              <p><strong>CLIENTE:</strong> {item.cliente}</p>
-              <p><strong>TEL:</strong> {item.tel}</p>
+              <p>
+                <strong>DESCRIÇÃO:</strong> {item.description}
+              </p>
+              <p>
+                <strong>CLIENTE:</strong> {item.cliente}
+              </p>
+
+              <p>
+                <strong>STATUS:</strong>
+                <span className={`status ${item.status}`}>{item.status}</span>
+              </p>
+
+              <p>
+                <strong>TEL:</strong> {item.tel}
+              </p>
 
               <div className="botoes">
                 {usuarioLogado?.role === "admin" && (
@@ -135,6 +150,15 @@ export default function VerServico() {
                 value={tel}
                 onChange={(e) => setTel(e.target.value)}
               />
+
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+              >
+                <option value="pendente">Pendente</option>
+                <option value="aprovado">Aprovado</option>
+                <option value="rejeitado">Rejeitado</option>
+              </select>
 
               <div className="botoes">
                 <button onClick={editar}>Salvar</button>

@@ -7,6 +7,7 @@ export default function Cadastro() {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate()
+  
 
   async function registrar(e) {
     e.preventDefault();
@@ -24,6 +25,8 @@ export default function Cadastro() {
         user,
         password,
       });
+
+      navigate("/")
 
       //avisa se deu certo seu login
       alert(response.data.message);

@@ -8,21 +8,44 @@ export default function Footer() {
     <div className="footer">
       <div className="contato">
         <h2>Entre em contato aqui:</h2>
-        <span>
-          <MdEmail size={30} color="white"/>
-          VSTR@gmail.com
-        </span> 
-        <span>
-          <MdEmail size={30} color="white"/>
-          inoveserralheria@gmail.com
-        </span>
-        <span>
-          <FaInstagram size={30} color="deeppink" />Instagram: @inove.serralheria.cerquilho
 
-        </span>
-        <span>
-          <FaWhatsapp size={30} color="green" /> Tel: (55) 15996485913
-        </span>
+        <div className="contatos">
+          <div className="coluna">
+            <h3>VSTR</h3>
+
+            <span>
+              <MdEmail size={25} /> VSTR@gmail.com
+            </span>
+
+              <span>
+              <FaInstagram size={25} color="deeppink" />
+              @GSTR.dev
+            </span>
+
+            <span>
+              <FaWhatsapp size={25} color="green" />
+              (55) 15 99648-5913
+            </span>
+          </div>
+
+          <div className="coluna">
+            <h3>Inove Serralheria</h3>
+
+            <span>
+              <MdEmail size={25} /> inoveserralheria@gmail.com
+            </span>
+
+            <span>
+              <FaInstagram size={25} color="deeppink" />
+              @inove.serralheria.cerquilho
+            </span>
+
+            <span>
+              <FaWhatsapp size={25} color="green" />
+              (55) 15 99700-1378
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );
