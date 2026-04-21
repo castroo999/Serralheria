@@ -32,12 +32,15 @@ export default function VerServico() {
 
   const usuarioLogado = JSON.parse(localStorage.getItem("user"));
   const [modalAberto, setModalAberto] = useState(false);
+  const [modalAberto2, setModalAberto2] = useState(false);
   const [editandoId, setEditandoId] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [cliente, setCliente] = useState("");
   const [tel, setTel] = useState("");
+  const [endereco, setEndereco] = useState("");
   const [status, setStatus] = useState("");
+  const [idParaDeletar, setIdParaDeletar] = useState(null);
 
   //  ABRIR MODAL
   function abrirModal(item) {
@@ -46,6 +49,7 @@ export default function VerServico() {
     setDescription(item.description);
     setCliente(item.cliente);
     setTel(item.tel);
+    setEndereco(item.endereco);
     setStatus(item.status);
     setModalAberto(true);
   }
@@ -53,6 +57,7 @@ export default function VerServico() {
   //  FECHAR MODAL
   function fecharModal() {
     setModalAberto(false);
+    setModalAberto2(false);
     setEditandoId(null);
   }
 
@@ -64,6 +69,7 @@ export default function VerServico() {
         description,
         cliente,
         tel,
+        endereco,
         status,
       });
 
@@ -71,12 +77,15 @@ export default function VerServico() {
       setOrcamentos((prev) =>
         prev.map((item) =>
           item.id === editandoId
-            ? { ...item, title, description, cliente, tel, status }
+            ? { ...item, title, description, cliente, tel, endereco, status }
             : item,
         ),
       );
 
       fecharModal();
+      setModalAberto2(true);
+
+      
     } catch (error) {
       console.log(error);
       alert("Erro ao editar (somente admin)");
@@ -104,6 +113,10 @@ export default function VerServico() {
               </p>
 
               <p>
+                <strong>ENDEREÇO:</strong> {item.endereco}
+              </p>
+
+              <p>
                 <strong>TEL:</strong> {item.tel}
               </p>
 
@@ -113,15 +126,47 @@ export default function VerServico() {
                 )}
 
                 {usuarioLogado?.role === "admin" && (
-                  <button onClick={() => deletar(item.id)}>Deletar</button>
+                  <button
+                    onClick={() => {
+                      setIdParaDeletar(item.id);
+                      setModalAberto2(true);
+                    }}
+                  >
+                    Deletar
+                  </button>
                 )}
               </div>
             </li>
           ))}
         </ul>
 
-        {/*  MODAL */}
+        {modalAberto2 && (
+          <div className="overlay4" onClick={fecharModal}>
+            <div className="modal3" onClick={(e) => e.stopPropagation()}>
+              <div className="certeza">
+                <h3>
+                  Certeza que deseja excluir esse item? 
+                  (essa ação nao tem volta!)
+                </h3>
 
+                <div className="botoes">
+                  <button
+                    onClick={() => {
+                      deletar(idParaDeletar);
+                      fecharModal();
+                    }}
+                  >
+                    Confirmar
+                  </button>
+
+                  <button onClick={fecharModal}>Cancelar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/*  MODAL */}
         {modalAberto && (
           <div className="overlay2" onClick={fecharModal}>
             <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -143,6 +188,12 @@ export default function VerServico() {
                 placeholder="Cliente"
                 value={cliente}
                 onChange={(e) => setCliente(e.target.value)}
+              />
+
+              <input
+                placeholder="Endereço"
+                value={endereco}
+                onChange={(e) => setEndereco(e.target.value)}
               />
 
               <input

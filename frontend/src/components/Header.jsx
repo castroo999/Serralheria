@@ -2,10 +2,9 @@ import "./Header.css";
 import { Link } from "react-router-dom";
 import img from "../assets/img-header.png";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Header() {
-
   function getUser() {
     try {
       //pega o user logado salvo no local storage
@@ -23,22 +22,33 @@ export default function Header() {
       }
 
       return null;
-    }
-    catch {
+    } catch {
       return null;
     }
   }
 
   const [usuario, setUsuario] = useState(getUser());
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  function sair(){
-    localStorage.clear()
-    setUsuario(null)
-    navigate("/")
+  function sair() {
+    localStorage.clear();
+    setUsuario(null);
+    window.dispatchEvent(new Event("userChanged"));
+    navigate("/");
   }
 
-  
+  //para atualizar o user atual
+  useEffect(() => {
+    const atualizarUser = () => {
+      setUsuario(JSON.parse(localStorage.getItem("user")));
+    };
+
+    window.addEventListener("userChanged", atualizarUser);
+
+    return () => {
+      window.removeEventListener("userChanged", atualizarUser);
+    };
+  }, []);
 
   return (
     <>
@@ -52,11 +62,7 @@ export default function Header() {
           <Link to="/ver_orcamentos">VER ORÇAMENTOS</Link>
         </nav>
 
-        {usuario && (
-          <span className="user">
-            User: {usuario.user}
-          </span>
-        )}
+        {usuario && <span className="user">User: {usuario.user}</span>}
 
         <button onClick={sair}>Sair</button>
       </div>

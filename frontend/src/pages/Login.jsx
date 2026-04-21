@@ -1,12 +1,15 @@
 import api from "../services/Api.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Cadastro.css"
-import "./Login.css"
+import { ThumbsUp } from "lucide-react";
+import "./Cadastro.css";
+import "./Login.css";
 
 export default function Login() {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
+  const [modalAberto, setModalAberto] = useState(false);
+  const [userModal, setUserModal] = useState("");
   const navigate = useNavigate();
 
   async function login(e) {
@@ -40,10 +43,19 @@ export default function Login() {
           role: decoded.role,
         }),
       );
+      //para salvar a mudança de conta automaticamente
+      window.dispatchEvent(new Event("userChanged"));
 
-      
-      //dps de logar leva pra home
-      navigate("/home");
+      setUserModal(decoded.user);
+      setModalAberto(true);
+
+      setTimeout(() => {
+        navigate("/home");
+      }, 2500);
+
+      // limpa tudo dps
+      setUser("");
+      setPassword("");
 
       // limpa os campos
       setUser("");
@@ -81,6 +93,19 @@ export default function Login() {
           </p>
         </form>
       </div>
+
+      {modalAberto && (
+        <div className="overlay4">
+          <div className="modal3">
+            <div className="sucesso">
+              <h3>
+                <ThumbsUp color="green" size={30} style={{ marginRight: "8px" }}/>
+                Login realizado com sucesso! Bem Vindo, {userModal}!
+              </h3>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

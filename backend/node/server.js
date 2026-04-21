@@ -20,11 +20,12 @@ await db.exec(`
     cliente TEXT,
     tel TEXT,
     user_id TEXT,
-    status TEXT DEFAULT 'pendente'
+    status TEXT DEFAULT 'pendente',
+    endereco TEXT
   )
 `);
 
-
+// await db.exec(`ALTER TABLE orcamentos ADD COLUMN endereco TEXT;`);
 
 //cria a tabela usuarios
 await db.exec(`
@@ -76,15 +77,15 @@ async function verificarToken(request, reply) {
 //criar um novo orçamento
 server.post('/orcamentos', { preHandler: verificarToken }, async (request, reply) => {
   try {
-    const { title, description, cliente, tel } = request.body;
+    const { title, description, cliente, tel, endereco } = request.body;
 
     const id = randomUUID();
     const user_id = request.user.id;
     const status = "pendente";
 
     await db.run(
-      "INSERT INTO orcamentos (id, title, description, cliente, tel, user_id, status) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [id, title, description, cliente, tel, user_id, status]
+      "INSERT INTO orcamentos (id, title, description, cliente, tel, user_id, status, endereco) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [id, title, description, cliente, tel, user_id, status, endereco]
     );
 
     return reply.status(201).send();
@@ -223,11 +224,11 @@ server.put('/orcamentos/:id', { preHandler: verificarToken }, async (request, re
   }
 
   const { id } = request.params;
-  const { title, description, cliente, tel, status } = request.body;
+  const { title, description, cliente, tel, status, endereco } = request.body;
 
   await db.run(
-    "UPDATE orcamentos SET title = ?, description = ?, cliente = ?, tel = ?, status = ? WHERE id = ?",
-    [title, description, cliente, tel, status, id]
+    "UPDATE orcamentos SET title = ?, description = ?, cliente = ?, tel = ?, status = ?, endereco = ? WHERE id = ?",
+    [title, description, cliente, tel, status, endereco, id]
   );
 
   return reply.status(204).send();
