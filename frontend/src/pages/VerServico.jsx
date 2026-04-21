@@ -3,7 +3,20 @@ import { useEffect, useState } from "react";
 import api from "../services/Api";
 
 export default function VerServico() {
+  const usuarioLogado = JSON.parse(localStorage.getItem("user"));
+  const [modalAberto, setModalAberto] = useState(false);
+  const [modalDeletar, setModalDeletar] = useState(false);
+  const [modalSucessoEditar, setModalSucessoEditar] = useState(false);
+  const [editandoId, setEditandoId] = useState(null);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [cliente, setCliente] = useState("");
+  const [tel, setTel] = useState("");
+  const [endereco, setEndereco] = useState("");
+  const [status, setStatus] = useState("");
+  const [idParaDeletar, setIdParaDeletar] = useState(null);
   const [orcamentos, setOrcamentos] = useState([]);
+
 
   useEffect(() => {
     async function carregarOrcamentos() {
@@ -30,18 +43,6 @@ export default function VerServico() {
     }
   }
 
-  const usuarioLogado = JSON.parse(localStorage.getItem("user"));
-  const [modalAberto, setModalAberto] = useState(false);
-  const [modalAberto2, setModalAberto2] = useState(false);
-  const [editandoId, setEditandoId] = useState(null);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [cliente, setCliente] = useState("");
-  const [tel, setTel] = useState("");
-  const [endereco, setEndereco] = useState("");
-  const [status, setStatus] = useState("");
-  const [idParaDeletar, setIdParaDeletar] = useState(null);
-
   //  ABRIR MODAL
   function abrirModal(item) {
     setEditandoId(item.id);
@@ -57,7 +58,8 @@ export default function VerServico() {
   //  FECHAR MODAL
   function fecharModal() {
     setModalAberto(false);
-    setModalAberto2(false);
+    setModalDeletar(false);
+    setModalSucessoEditar(false);
     setEditandoId(null);
   }
 
@@ -83,9 +85,7 @@ export default function VerServico() {
       );
 
       fecharModal();
-      setModalAberto2(true);
-
-      
+      setModalSucessoEditar(true);
     } catch (error) {
       console.log(error);
       alert("Erro ao editar (somente admin)");
@@ -129,7 +129,7 @@ export default function VerServico() {
                   <button
                     onClick={() => {
                       setIdParaDeletar(item.id);
-                      setModalAberto2(true);
+                      setModalDeletar(true);
                     }}
                   >
                     Deletar
@@ -140,13 +140,13 @@ export default function VerServico() {
           ))}
         </ul>
 
-        {modalAberto2 && (
+        {modalDeletar && (
           <div className="overlay4" onClick={fecharModal}>
             <div className="modal3" onClick={(e) => e.stopPropagation()}>
               <div className="certeza">
                 <h3>
-                  Certeza que deseja excluir esse item? 
-                  (essa ação nao tem volta!)
+                  Certeza que deseja excluir esse item? (essa ação nao tem
+                  volta!)
                 </h3>
 
                 <div className="botoes">
@@ -162,6 +162,15 @@ export default function VerServico() {
                   <button onClick={fecharModal}>Cancelar</button>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {modalSucessoEditar && (
+          <div className="overlay4" onClick={fecharModal}>
+            <div className="modal3" onClick={(e) => e.stopPropagation()}>
+              <h3>Orçamento atualizado com sucesso!</h3>
+              <button onClick={fecharModal}>Fechar</button>
             </div>
           </div>
         )}

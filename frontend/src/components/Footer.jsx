@@ -11,10 +11,10 @@ export default function Footer() {
 
         <div className="contatos">
           <div className="coluna">
-            <h3>VSTR</h3>
+            <h3>GSTR</h3>
 
             <span>
-              <MdEmail size={25} /> VSTR@gmail.com
+              <MdEmail size={25} /> GSTR@gmail.com
             </span>
 
               <span>

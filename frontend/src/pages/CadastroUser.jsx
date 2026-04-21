@@ -1,7 +1,7 @@
 
 import api from "../services/Api.js";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Cadastro() {
   const [user, setUser] = useState("");
@@ -62,6 +62,10 @@ export default function Cadastro() {
           />
 
           <button>Cadastrar</button>
+          <p className="cadastrar">
+            Já tem uma conta? <Link to="/">Entrar</Link>
+          </p>
+
         </form>
       </div>
     </div>

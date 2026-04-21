@@ -62,9 +62,14 @@ export default function Header() {
           <Link to="/ver_orcamentos">VER ORÇAMENTOS</Link>
         </nav>
 
-        {usuario && <span className="user">User: {usuario.user}</span>}
-
+        {usuario && 
+        <>
+        <span className="user">User: {usuario.user}</span>
         <button onClick={sair}>Sair</button>
+        </>
+        }
+
+        
       </div>
 
       <div className="header">

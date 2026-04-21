@@ -1,6 +1,6 @@
 import api from "../services/Api.js";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { ThumbsUp } from "lucide-react";
 import "./Cadastro.css";
 import "./Login.css";
@@ -12,15 +12,31 @@ export default function Login() {
   const [userModal, setUserModal] = useState("");
   const navigate = useNavigate();
 
+  //para garantir q dps de vc logar vc va para a home
+  useEffect(() => {
+    if (modalAberto) {
+      const timer = setTimeout(() => {
+        navigate("/home");
+      }, 1500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [modalAberto, navigate]);
+
+
   async function login(e) {
     e.preventDefault();
 
+
+    //evita q o usuario deixe um campo sem preencher
     if (!user || !password) {
       alert("Preencha todos os campos por favor!");
       return;
     }
 
     try {
+
+      //pega os dados da api
       const response = await api.post("/login", {
         user,
         password,
@@ -46,20 +62,16 @@ export default function Login() {
       //para salvar a mudança de conta automaticamente
       window.dispatchEvent(new Event("userChanged"));
 
+      //para pegar somente o nome do usuario
       setUserModal(decoded.user);
+      //para abrir o modal de login
       setModalAberto(true);
-
-      setTimeout(() => {
-        navigate("/home");
-      }, 2500);
 
       // limpa tudo dps
       setUser("");
       setPassword("");
 
-      // limpa os campos
-      setUser("");
-      setPassword("");
+
     } catch (error) {
       console.log("USER DIGITADO:", user);
       console.error(error.response?.data || error.message);
@@ -89,7 +101,7 @@ export default function Login() {
           <button type="submit">Entrar</button>
 
           <p className="cadastrar">
-            Não tem conta? <a href="/cadastro">Cadastre-se</a>
+            Não tem conta? <Link to="/cadastro">Cadastre-se</Link>
           </p>
         </form>
       </div>
@@ -99,7 +111,11 @@ export default function Login() {
           <div className="modal3">
             <div className="sucesso">
               <h3>
-                <ThumbsUp color="green" size={30} style={{ marginRight: "8px" }}/>
+                <ThumbsUp
+                  color="green"
+                  size={30}
+                  style={{ marginRight: "8px" }}
+                />
                 Login realizado com sucesso! Bem Vindo, {userModal}!
               </h3>
             </div>

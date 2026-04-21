@@ -13,6 +13,8 @@ form {
   max-width: 420px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
@@ -26,6 +28,7 @@ form h1 {
 
 form input {
   padding: 14px;
+  width: 100%;
   border-radius: 30px;
   border: none;
   outline: none;
