@@ -1,5 +1,5 @@
 import api from "../services/Api.js";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ThumbsUp } from "lucide-react";
 import "./Cadastro.css";
@@ -12,21 +12,8 @@ export default function Login() {
   const [userModal, setUserModal] = useState("");
   const navigate = useNavigate();
 
-  //para garantir q dps de vc logar vc va para a home
-  useEffect(() => {
-    if (modalAberto) {
-      const timer = setTimeout(() => {
-        navigate("/home");
-      }, 1500);
-
-      return () => clearTimeout(timer);
-    }
-  }, [modalAberto, navigate]);
-
-
   async function login(e) {
     e.preventDefault();
-
 
     //evita q o usuario deixe um campo sem preencher
     if (!user || !password) {
@@ -35,7 +22,6 @@ export default function Login() {
     }
 
     try {
-
       //pega os dados da api
       const response = await api.post("/login", {
         user,
@@ -67,11 +53,14 @@ export default function Login() {
       //para abrir o modal de login
       setModalAberto(true);
 
+      // espera um pouco e depois redireciona pra home
+      setTimeout(() => {
+        navigate("/home");
+      }, 1500);
+
       // limpa tudo dps
       setUser("");
       setPassword("");
-
-
     } catch (error) {
       console.log("USER DIGITADO:", user);
       console.error(error.response?.data || error.message);

@@ -9,6 +9,7 @@ export default function Cadastro() {
   const [endereco, setEndereco] = useState("");
   const [tel, setTel] = useState("");
   const [modalAberto, setModalAberto] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   function fecharModal() {
     setModalAberto(false);
@@ -22,6 +23,9 @@ export default function Cadastro() {
       alert("Preencha todos os campos por favor!");
       return;
     }
+
+    //coemça o loading
+    setLoading(true);
 
     try {
       //espera conexção com o backend
@@ -46,11 +50,12 @@ export default function Cadastro() {
       setCliente("");
       setEndereco("");
       setTel("");
-
-
     } catch (error) {
       console.error(error);
       alert("Erro ao enviar orçamento");
+    } finally {
+      //termina o loading
+      setLoading(false);
     }
   }
 
@@ -89,7 +94,9 @@ export default function Cadastro() {
           onChange={(e) => setTel(e.target.value)}
         />
 
-        <button type="submit">Enviar</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Enviando..." : "Enviar"}
+        </button>
       </form>
 
       {modalAberto && (

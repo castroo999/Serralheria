@@ -78,6 +78,17 @@ server.post('/orcamentos', { preHandler: verificarToken }, async (request, reply
   try {
     const { title, description, cliente, tel, endereco } = request.body;
 
+    //validação dos campos
+    if (!title || !description || !cliente || !tel || !endereco) {
+      return reply.status(400).send({ error: "Preencha todos os campos!" });
+    }
+
+    //validação de telefone
+    const telLimpo = tel.replace(/\D/g, "");
+    if (telLimpo.length < 10) {
+      return reply.status(400).send({ error: "Telefone inválido!" });
+    }
+
     const id = randomUUID();
     const user_id = request.user.id;
     const status = "pendente";
@@ -104,6 +115,11 @@ server.post('/registrar', async (request, reply) => {
     //verifica se a senha ta certa
     if (!user || !password) {
       return reply.status(400).send({ error: "preencha todos os campos!" });
+    }
+
+    //validação de senha
+    if (password.length < 6) {
+      return reply.status(400).send({ error: "Senha precisa ter pelo menos 6 caracteres!" });
     }
 
     //verifica usuario
@@ -225,6 +241,11 @@ server.put('/orcamentos/:id', { preHandler: verificarToken }, async (request, re
   const { id } = request.params;
   const { title, description, cliente, tel, status, endereco } = request.body;
 
+  //validação
+  if (!title || !description || !cliente || !tel || !status || !endereco) {
+    return reply.status(400).send({ error: "Preencha todos os campos!" });
+  }
+
   await db.run(
     "UPDATE orcamentos SET title = ?, description = ?, cliente = ?, tel = ?, status = ?, endereco = ? WHERE id = ?",
     [title, description, cliente, tel, status, endereco, id]
@@ -252,6 +273,22 @@ server.delete('/orcamentos/:id', { preHandler: verificarToken }, async (request,
   );
 
   return reply.status(204).send();
+});
+
+
+//tratamento global de erro
+server.setErrorHandler((error, request, reply) => {
+  console.error("ERRO GLOBAL:", error);
+
+  // erro de validação
+  if (error.validation) {
+    return reply.status(400).send({ error: "Dados inválidos" });
+  }
+
+  // erro padrão
+  return reply.status(500).send({
+    error: "Erro interno do servidor",
+  });
 });
 
 
