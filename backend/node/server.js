@@ -36,6 +36,7 @@ await db.exec(`
   )  
 `)
 
+// await db.exec(`ALTER TABLE orcamentos ADD COLUMN criado_em TEXT`);
 // await db.exec(`DELETE FROM user WHERE id = 'a90c7bd4-e012-4e1f-a07f-30e2e63174bb'`);
 
 //cria o banco de dados SQLITE
@@ -83,19 +84,16 @@ server.post('/orcamentos', { preHandler: verificarToken }, async (request, reply
       return reply.status(400).send({ error: "Preencha todos os campos!" });
     }
 
-    //validação de telefone
-    const telLimpo = tel.replace(/\D/g, "");
-    if (telLimpo.length < 10) {
-      return reply.status(400).send({ error: "Telefone inválido!" });
-    }
+    //add a data de qnd cada orçamento foi criado
+    const criado_em = new Date().toISOString();
 
     const id = randomUUID();
     const user_id = request.user.id;
     const status = "pendente";
 
     await db.run(
-      "INSERT INTO orcamentos (id, title, description, cliente, tel, user_id, status, endereco) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-      [id, title, description, cliente, tel, user_id, status, endereco]
+      "INSERT INTO orcamentos (id, title, description, cliente, tel, user_id, status, endereco, criado_em) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [id, title, description, cliente, tel, user_id, status, endereco, criado_em]
     );
 
     return reply.status(201).send();

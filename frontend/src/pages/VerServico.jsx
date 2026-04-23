@@ -17,7 +17,6 @@ export default function VerServico() {
   const [idParaDeletar, setIdParaDeletar] = useState(null);
   const [orcamentos, setOrcamentos] = useState([]);
 
-
   useEffect(() => {
     async function carregarOrcamentos() {
       try {
@@ -64,15 +63,14 @@ export default function VerServico() {
   }
 
   //mandar mensagem pelo whatszap do cliente
-  function mandarMsg(tel, cliente){
+  function mandarMsg(tel, cliente) {
     //pega o numero do cliente e tira tudo q nao é numero
-    const numero = tel.replace(/\D/g,"");
+    const numero = tel.replace(/\D/g, "");
 
     //msg que será enviada para o cliente
-    const msg = 
-    `Olá ${cliente}, tudo bem?
+    const msg = `Olá ${cliente}, tudo bem?
     estamos entrando em contato para falar 
-    sobre seu orçamento que foi aprovado`
+    sobre seu orçamento que foi aprovado`;
 
     //para abrir o whatszap com o numero do cliente e a msg
     const url = `https://wa.me/55${numero}?text=${encodeURIComponent(msg)}`;
@@ -117,18 +115,13 @@ export default function VerServico() {
         <span>Orçamentos Registrados!</span>
         <ul>
           {orcamentos.map((item) => (
-            <li key={item.id}>
+            <li key={item.id} className={item.status}>
               <h3>TITULO: {item.title}</h3>
               <p>
                 <strong>DESCRIÇÃO:</strong> {item.description}
               </p>
               <p>
                 <strong>CLIENTE:</strong> {item.cliente}
-              </p>
-
-              <p>
-                <strong>STATUS:</strong>
-                <span className={`status ${item.status}`}>{item.status}</span>
               </p>
 
               <p>
@@ -139,8 +132,17 @@ export default function VerServico() {
                 <strong>TEL:</strong> {item.tel}
               </p>
 
-              <div className="botoes">
+              <p>
+                <strong>DATA:</strong>{" "}
+                {new Date(item.criado_em).toLocaleString("pt-BR")}
+              </p>
 
+              <p>
+                <strong>STATUS:</strong>
+                <span className={`status ${item.status}`}>{item.status}</span>
+              </p>
+
+              <div className="botoes">
                 {usuarioLogado?.role === "admin" && (
                   <button onClick={() => abrirModal(item)}>Editar</button>
                 )}
@@ -156,8 +158,13 @@ export default function VerServico() {
                   </button>
                 )}
               </div>
-              {usuarioLogado?.role === "admin" &&(
-                <button className="whats" onClick={()=> mandarMsg(item.tel, item.cliente)}>Enviar mensagem</button>
+              {usuarioLogado?.role === "admin" && (
+                <button
+                  className="whats"
+                  onClick={() => mandarMsg(item.tel, item.cliente)}
+                >
+                  Enviar mensagem
+                </button>
               )}
             </li>
           ))}
