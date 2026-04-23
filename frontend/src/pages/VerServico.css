@@ -126,7 +126,6 @@
   transform: scale(1.02);
 }
 
-
 .status {
   display: inline-block;
   padding: 4px 10px;
@@ -192,6 +191,7 @@
     opacity: 0;
     transform: scale(0.9) translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -220,4 +220,9 @@ select.aprovado {
 
 select.rejeitado {
   background-color: red;
+}
+
+.listados button.whats {
+  width: 100%;
+  background: linear-gradient(135deg, #25D366, #128C7E);
 }

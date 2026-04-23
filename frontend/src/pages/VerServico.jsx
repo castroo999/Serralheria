@@ -63,6 +63,25 @@ export default function VerServico() {
     setEditandoId(null);
   }
 
+  //mandar mensagem pelo whatszap do cliente
+  function mandarMsg(tel, cliente){
+    //pega o numero do cliente e tira tudo q nao é numero
+    const numero = tel.replace(/\D/g,"");
+
+    //msg que será enviada para o cliente
+    const msg = 
+    `Olá ${cliente}, tudo bem?
+    estamos entrando em contato para falar 
+    sobre seu orçamento que foi aprovado`
+
+    //para abrir o whatszap com o numero do cliente e a msg
+    const url = `https://wa.me/55${numero}?text=${encodeURIComponent(msg)}`;
+
+    window.open(url, "_blank");
+
+    if (!tel) return alert("numero invalido!");
+  }
+
   //  EDITAR
   async function editar() {
     try {
@@ -121,6 +140,7 @@ export default function VerServico() {
               </p>
 
               <div className="botoes">
+
                 {usuarioLogado?.role === "admin" && (
                   <button onClick={() => abrirModal(item)}>Editar</button>
                 )}
@@ -136,6 +156,9 @@ export default function VerServico() {
                   </button>
                 )}
               </div>
+              {usuarioLogado?.role === "admin" &&(
+                <button className="whats" onClick={()=> mandarMsg(item.tel, item.cliente)}>Enviar mensagem</button>
+              )}
             </li>
           ))}
         </ul>

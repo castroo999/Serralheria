@@ -25,7 +25,6 @@ await db.exec(`
   )
 `);
 
-// await db.exec(`ALTER TABLE orcamentos ADD COLUMN endereco TEXT;`);
 
 //cria a tabela usuarios
 await db.exec(`
