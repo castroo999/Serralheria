@@ -55,7 +55,7 @@ export default function Login() {
 
       // espera um pouco e depois redireciona pra home
       setTimeout(() => {
-        navigate("/home");
+        navigate("/dashboard");
       }, 1500);
 
       // limpa tudo dps

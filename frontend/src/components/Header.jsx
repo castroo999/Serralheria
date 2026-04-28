@@ -50,26 +50,52 @@ export default function Header() {
     };
   }, []);
 
+  const [token, setToken] = useState(localStorage.getItem("token"));
+
+  useEffect(() => {
+    function atualizarToken() {
+      setToken(localStorage.getItem("token"));
+    }
+
+    window.addEventListener("userChanged", atualizarToken);
+
+    return () => {
+      window.removeEventListener("userChanged", atualizarToken);
+    };
+  }, []);
+
   return (
     <>
       <div className="navbar">
         <h2>INOVE SERRALHERIA</h2>
 
         <nav>
-          <Link to="/home">HOME</Link>
-          <Link to="/servicos">SERVIÇOS</Link>
-          <Link to="/orcamentos">ORÇAMENTOS</Link>
-          <Link to="/ver_orcamentos">VER ORÇAMENTOS</Link>
+          
+          {!token && (
+            <>
+              <Link to="/">INICIO</Link>
+              <Link to="/">SERVIÇOS</Link>
+              <Link to="/login">LOGIN</Link>
+              <Link to="/cadastro">CADASTRAR</Link>
+            </>
+          )}
+
+          {token && (
+            <>
+              <Link to="/dashboard">INICIO</Link>
+              <Link to="/servicos">SERVIÇOS</Link>
+              <Link to="/orcamentos">ORÇAMENTOS</Link>
+              <Link to="/ver_orcamentos">VER ORÇAMENTOS</Link>
+            </>
+          )}
         </nav>
 
-        {usuario && 
-        <>
-        <span className="user">User: {usuario.user}</span>
-        <button onClick={sair}>Sair</button>
-        </>
-        }
-
-        
+        {usuario && (
+          <>
+            <span className="user">User: {usuario.user}</span>
+            <button onClick={sair}>Sair</button>
+          </>
+        )}
       </div>
 
       <div className="header">

@@ -1,6 +1,6 @@
 .tudo {
   max-width: 1200px;
-  margin: 0 auto; 
+  margin: 0 auto;
   padding: 0 20px;
 }
 
@@ -11,18 +11,17 @@
 }
 
 .cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    justify-content: center;
-    gap: 30px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-content: center;
+  gap: 30px;
 }
 
 .card {
-  background-color: aqua;
   height: 330px;
   width: 300px;
   border-radius: 10px;
- transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .card img {
@@ -32,9 +31,9 @@
   transition: transform 0.3s ease;
 }
 
-.card:hover {
+.card img:hover {
   transform: translateY(-10px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
 .card:hover img {

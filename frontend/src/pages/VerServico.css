@@ -9,13 +9,11 @@
   flex-wrap: wrap;
 }
 
-
 .listados {
   font-family: 'Poppins', sans-serif;
   width: 100%;
   max-width: 1100px;
 }
-
 
 .listados span {
   font-size: 24px;
@@ -25,7 +23,6 @@
   margin-bottom: 30px;
   color: #fff;
 }
-
 
 .listados ul {
   list-style: none;
@@ -37,15 +34,16 @@
   justify-content: center;
 }
 
-
 .listados ul li {
   background: rgba(255, 255, 255, 0.95);
   width: 280px;
+  min-height: 360px; 
   border-radius: 20px;
   padding: 20px;
   font-size: 14px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 10px;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
   transition: 0.3s;
@@ -53,11 +51,9 @@
   overflow: hidden;
 }
 
-
 .listados ul li:hover {
   transform: translateY(-8px) scale(1.02);
 }
-
 
 .listados ul li::before {
   content: "";
@@ -68,6 +64,7 @@
   width: 6px;
   border-radius: 20px 0 0 20px;
 }
+
 
 
 .listados ul li .status.aprovado {
@@ -91,6 +88,7 @@
 }
 
 
+
 .listados ul li.aprovado::before {
   background: #16a34a;
 }
@@ -103,7 +101,6 @@
   background: #dc2626;
 }
 
-
 .listados ul li.aguardando::before {
   background: #a38181;
 }
@@ -111,7 +108,6 @@
 .listados ul li p {
   margin: 4px 0;
 }
-
 
 .status {
   display: inline-block;
@@ -123,6 +119,7 @@
 }
 
 
+
 .botoes {
   display: flex;
   justify-content: center;
@@ -132,7 +129,7 @@
 }
 
 .listados button {
-  flex: 1;
+  width: 100%;
   padding: 10px;
   border-radius: 25px;
   border: none;
@@ -150,11 +147,25 @@
 }
 
 
+
 .listados button.whats {
+  flex: none;
   width: 100%;
   margin-top: 10px;
   background: linear-gradient(135deg, #25D366, #128C7E);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  padding: 12px;
 }
+
+.listados button.whats:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
 
 
 .overlay2,
@@ -175,6 +186,8 @@
 .modal,
 .modal3 {
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   gap: 15px;
   border-radius: 16px;
@@ -184,12 +197,10 @@
   animation: aparecer 0.3s ease;
 }
 
-
 .modal {
   background: #801212;
   color: #fff;
 }
-
 
 .modal3 {
   background: #fff;
@@ -198,8 +209,8 @@
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
 }
 
-
 .modal input {
+  width: 100%;
   padding: 14px;
   border-radius: 30px;
   border: none;
@@ -212,6 +223,7 @@
   background: rgba(255, 255, 255, 0.25);
   transform: scale(1.02);
 }
+
 
 
 select {
@@ -235,9 +247,11 @@ select.rejeitado {
   border-left: 5px solid #dc2626;
 }
 
-select.aguardando{
+select.aguardando {
   border-left: 5px solid rgb(12, 137, 255);
 }
+
+
 
 .filtro {
   display: block;
@@ -250,15 +264,16 @@ select.aguardando{
   font-family: 'Poppins', sans-serif;
   font-size: 14px;
   background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   transition: 0.3s;
 }
 
 .filtro:focus {
   transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
+/* ANIMAÇÃO */
 
 @keyframes aparecer {
   from {
