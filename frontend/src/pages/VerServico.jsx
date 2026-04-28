@@ -16,7 +16,20 @@ export default function VerServico() {
   const [status, setStatus] = useState("");
   const [idParaDeletar, setIdParaDeletar] = useState(null);
   const [orcamentos, setOrcamentos] = useState([]);
+  const [filtro, setFiltro] = useState("");
 
+  //filtro de orçamento
+  const orcamentosFiltrados = orcamentos.filter((item) => {
+    const texto = filtro.toLocaleLowerCase();
+
+    return (
+      item.title.toLowerCase().includes(texto) ||
+      item.cliente.toLowerCase().includes(texto) ||
+      item.status.toLowerCase().includes(texto)
+    );
+  });
+
+  //carrega os orçamentos
   useEffect(() => {
     async function carregarOrcamentos() {
       try {
@@ -112,9 +125,20 @@ export default function VerServico() {
   return (
     <div className="container2">
       <div className="listados">
+        
+        {usuarioLogado?.role === "admin" && (
+          <input
+            type="text"
+            className="filtro"
+            placeholder="Filtrar por cliente ou status..."
+            value={filtro}
+            onChange={(e) => setFiltro(e.target.value)}
+          />
+        )}
+
         <span>Orçamentos Registrados!</span>
         <ul>
-          {orcamentos.map((item) => (
+          {orcamentosFiltrados.map((item) => (
             <li key={item.id} className={item.status}>
               <h3>TITULO: {item.title}</h3>
               <p>
@@ -242,12 +266,14 @@ export default function VerServico() {
               />
 
               <select
+                className={status}
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
               >
                 <option value="pendente">Pendente</option>
                 <option value="aprovado">Aprovado</option>
                 <option value="rejeitado">Rejeitado</option>
+                <option value="aguardando">Aguardando Resposta</option>
               </select>
 
               <div className="botoes">
