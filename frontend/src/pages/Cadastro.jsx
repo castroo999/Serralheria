@@ -71,12 +71,6 @@ export default function Cadastro() {
         />
 
         <input
-          placeholder="Descrição:"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-
-        <input
           placeholder="Cliente:"
           value={cliente}
           onChange={(e) => setCliente(e.target.value)}
@@ -93,6 +87,15 @@ export default function Cadastro() {
           value={tel}
           onChange={(e) => setTel(e.target.value)}
         />
+
+        <textarea
+          placeholder="Descreva o serviço com detalhes..."
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          maxLength={500}
+        />
+
+        
 
         <button type="submit" disabled={loading}>
           {loading ? "Enviando..." : "Enviar"}

@@ -125,7 +125,6 @@ export default function VerServico() {
   return (
     <div className="container2">
       <div className="listados">
-        
         {usuarioLogado?.role === "admin" && (
           <input
             type="text"
@@ -242,12 +241,6 @@ export default function VerServico() {
               />
 
               <input
-                placeholder="Descrição"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-
-              <input
                 placeholder="Cliente"
                 value={cliente}
                 onChange={(e) => setCliente(e.target.value)}
@@ -263,6 +256,13 @@ export default function VerServico() {
                 placeholder="Telefone"
                 value={tel}
                 onChange={(e) => setTel(e.target.value)}
+              />
+
+              <textarea
+                placeholder="Descreva o serviço com detalhes..."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                maxLength={500}
               />
 
               <select
