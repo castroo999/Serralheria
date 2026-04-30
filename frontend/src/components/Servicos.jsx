@@ -15,7 +15,7 @@ export default function Servicos() {
 
   return (
     <div className="tudo">
-      <h2>Nossos Serviços</h2>
+      <h1>Nossos Serviços</h1>
 
       <div className="cards2">
         {servicos.map((item) => (

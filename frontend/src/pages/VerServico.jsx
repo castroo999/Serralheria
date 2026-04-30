@@ -17,6 +17,50 @@ export default function VerServico() {
   const [idParaDeletar, setIdParaDeletar] = useState(null);
   const [orcamentos, setOrcamentos] = useState([]);
   const [filtro, setFiltro] = useState("");
+  const [modelos, setModelo] = useState([]);
+
+  //ver e criar modelos de orçamentos
+  useEffect(() => {
+    if (usuarioLogado?.role !== "admin") return;
+
+    async function carregarModelos() {
+      try {
+        const response = await api.get("/modelos");
+        setModelo(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    carregarModelos();
+  }, [usuarioLogado]);
+
+  //aplica modelo de orçamento
+  function aplicarModelo(id) {
+    const modelo = modelos.find((m) => m.id === id);
+    if (!modelo) return;
+
+    setTitle(modelo.title);
+
+    // converte string JSON em array
+    const itens = JSON.parse(modelo.itens || "[]");
+
+    // monta texto dos itens
+    const texto = itens
+      .map((item) => `${item.nome} - R$${item.preco}`)
+      .join("\n");
+
+    // soma total
+    const total = itens.reduce((acc, item) => acc + Number(item.preco), 0);
+
+    setDescription((prev) => {
+      const novoModelo = `${texto}\n\nTOTAL: R$${total}`;
+
+      return prev
+        ? `${prev}\n\n--- MODELO APLICADO ---\n${novoModelo}`
+        : novoModelo;
+    });
+  }
 
   //filtro de orçamento
   const orcamentosFiltrados = orcamentos.filter((item) => {
@@ -228,11 +272,25 @@ export default function VerServico() {
           </div>
         )}
 
-        {/*  MODAL */}
+        {/*  modal */}
         {modalAberto && (
           <div className="overlay2" onClick={fecharModal}>
             <div className="modal" onClick={(e) => e.stopPropagation()}>
               <h2>Editar Orçamento</h2>
+
+              {/* modelos */}
+              {usuarioLogado?.role === "admin" && (
+                <select onChange={(e) => aplicarModelo(e.target.value)}>
+                  <option value="">Selecionar Modelo</option>
+
+                  {modelos.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.title}
+                      {m.texto}
+                    </option>
+                  ))}
+                </select>
+              )}
 
               <input
                 placeholder="Título"

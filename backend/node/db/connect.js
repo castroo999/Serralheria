@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 export async function initDB() {
   const db = await connectDB();
 
+  //cria a tabela de orçamentos
   await db.exec(`
     CREATE TABLE IF NOT EXISTS orcamentos (
       id TEXT PRIMARY KEY,
@@ -29,6 +30,16 @@ export async function initDB() {
     role TEXT
     )  
   `)
+
+  //cria a tabela modelos
+  await db.exec(`
+      CREATE TABLE IF NOT EXISTS modelos(
+      id TEXT PRIMARY KEY,
+      title TEXT,
+      itens TEXT
+      )
+    `)
+
 
   //criar admin automaticamente se nao existir
   const adminExiste = await db.get(

@@ -4,7 +4,7 @@ import img from "../assets/img-header.png";
 export default function CardInicial() {
   return (
     <div className="tudo">
-      <h2>Alguns de nossos serviços</h2>
+      <h1>Alguns de nossos serviços</h1>
 
       <div className="cards">
         <div className="card">

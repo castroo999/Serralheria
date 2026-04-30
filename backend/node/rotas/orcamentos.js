@@ -1,5 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { verificarToken } from "../middleware/auth.js";
+import { request } from "node:http";
+import { error } from "node:console";
 
 export async function orcamentosRoutes(server, db) {
 
@@ -82,4 +84,62 @@ export async function orcamentosRoutes(server, db) {
 
     return reply.status(204).send();
   });
+
+  //cria modelos de orçamentos
+  server.post('/modelos', { preHandler: verificarToken }, async (request, reply) => {
+
+    if (request.user.role !== "admin") {
+      return reply.status(403).send({ error: "Apenas admin tem acesso aos modelos" })
+    }
+
+    try {
+      const { title, itens } = request.body;
+      const id = randomUUID();
+      const itensJSON = JSON.stringify(itens || []);
+
+      await db.run(
+        "INSERT INTO modelos (id, title, itens) VALUES (?, ?, ?)",
+        [id, title, itensJSON]
+      );
+
+      return reply.status(201).send({ message: "Modelo criado" });
+
+    } catch (err) {
+      console.log("ERRO BACK:", err);
+      return reply.status(500).send({ error: "Erro interno no servidor" });
+    }
+  });
+
+
+  //listar modelos
+  server.get('/modelos', { preHandler: verificarToken }, async (request, reply) => {
+    if (request.user.role != "admin") {
+      return reply.status(403).send({ error: "Apenas admin tem acesso aos modelos" })
+    }
+
+    const modelos = await db.all("SELECT * FROM modelos");
+
+    // converte itens de string para array
+    const modelosFormatados = modelos.map(m => ({
+      ...m,
+      itens: JSON.parse(m.itens || "[]")
+    }));
+
+    return modelosFormatados;
+  })
+
+  //deletar modelo de orçamento
+  server.delete('/modelos/:id', { preHandler: verificarToken }, async (req, reply) => {
+
+    if (req.user.role != "admin") {
+      return reply.status(403).send({ error: "Apenas admin tem acesso aos modelos" })
+    }
+
+    const { id } = req.params
+
+    await db.run("DELETE FROM modelos WHERE id = ?", [id])
+    
+    return reply.send({ message: "Modelo deletado com sucesso" });
+
+  })
 }

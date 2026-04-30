@@ -9,6 +9,7 @@ import Cadastro from "./pages/Cadastro";
 import Servicos from "./components/Servicos";
 import VerServico from "./pages/VerServico";
 import CardInicial from "./components/CardInicial";
+import Modelos from "./pages/Modelos";
 
 export default function App() {
   const token = localStorage.getItem("token");
@@ -18,16 +19,21 @@ export default function App() {
       <Header />
 
       <Routes>
-        
         <Route path="/" element={<Home />} />
 
-        
         <Route path="/login" element={<Login />} />
 
-        
         <Route path="/cadastro" element={<CadastroUser />} />
 
-        
+        <Route
+          path="/modelos"
+          element={
+            JSON.parse(localStorage.getItem("user"))?.role === "admin" ? (<Modelos />) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+
         <Route
           path="/dashboard"
           element={token ? <CardInicial /> : <Navigate to="/login" />}

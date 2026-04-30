@@ -29,6 +29,7 @@ export default function Header() {
 
   const [usuario, setUsuario] = useState(getUser());
   const navigate = useNavigate();
+  
 
   function sair() {
     localStorage.clear();
@@ -86,6 +87,9 @@ export default function Header() {
               <Link to="/servicos">SERVIÇOS</Link>
               <Link to="/orcamentos">ORÇAMENTOS</Link>
               <Link to="/ver_orcamentos">VER ORÇAMENTOS</Link>
+              {usuario?.role === "admin" &&(
+                <Link to="/modelos">VER MODELOS</Link>
+              )}
             </>
           )}
         </nav>
