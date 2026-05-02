@@ -166,3 +166,19 @@ form {
   border-radius: 8px;
   cursor: pointer;
 }
+
+.botoes-modelo {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.botoes-modelo button {
+  flex: 1;
+  min-width: 120px;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}

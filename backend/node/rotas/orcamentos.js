@@ -1,7 +1,5 @@
 import { randomUUID } from "node:crypto";
 import { verificarToken } from "../middleware/auth.js";
-import { request } from "node:http";
-import { error } from "node:console";
 
 export async function orcamentosRoutes(server, db) {
 
@@ -10,8 +8,8 @@ export async function orcamentosRoutes(server, db) {
     try {
       const { title, description, cliente, tel, endereco } = request.body;
 
-      if (!title || !description || !cliente || !tel || !endereco) {
-        return reply.status(400).send({ error: "Preencha todos os campos!" });
+      if (!title || !description) {
+        return reply.status(400).send({ error: "Título e descrição são obrigatórios!" });
       }
 
       const criado_em = new Date().toISOString();
@@ -22,7 +20,7 @@ export async function orcamentosRoutes(server, db) {
 
       await db.run(
         "INSERT INTO orcamentos (id, title, description, cliente, tel, user_id, status, endereco, criado_em) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [id, title, description, cliente, tel, user_id, status, endereco, criado_em]
+        [id, title, description, cliente || "", tel || "", user_id, status, endereco || "", criado_em]
       );
 
       return reply.status(201).send();
@@ -56,8 +54,8 @@ export async function orcamentosRoutes(server, db) {
     const { id } = request.params;
     const { title, description, cliente, tel, status, endereco } = request.body;
 
-    if (!title || !description || !cliente || !tel || !status || !endereco) {
-      return reply.status(400).send({ error: "Preencha todos os campos!" });
+    if (!title || !description) {
+      return reply.status(400).send({ error: "Título e descrição são obrigatórios!" });
     }
 
     await db.run(
@@ -102,7 +100,7 @@ export async function orcamentosRoutes(server, db) {
         [id, title, itensJSON]
       );
 
-      return reply.status(201).send({ message: "Modelo criado" });
+      return reply.status(201).send({ id, message: "Modelo criado" });
 
     } catch (err) {
       console.log("ERRO BACK:", err);
@@ -128,6 +126,30 @@ export async function orcamentosRoutes(server, db) {
     return modelosFormatados;
   })
 
+  //editar modelo
+  server.put('/modelos/:id', { preHandler: verificarToken }, async (req, reply) => {
+
+    console.log("USER:", req.user);
+
+    if (req.user.role != "admin") {
+      return reply.status(403).send({ error: "Apenas admin tem acesso aos modelos" })
+    }
+
+    //pega dados
+    const { id } = req.params
+    const { title, itens } = req.body
+
+    //transofrma em json e joga pra um array
+    const itensJSON = JSON.stringify(itens || [])
+
+    await db.run(
+      "UPDATE modelos SET title = ?, itens = ? WHERE id = ?",
+      [title, itensJSON, id]
+    )
+
+    return reply.send({ message: "Modelo atualizado com sucesso" })
+  })
+
   //deletar modelo de orçamento
   server.delete('/modelos/:id', { preHandler: verificarToken }, async (req, reply) => {
 
@@ -138,7 +160,7 @@ export async function orcamentosRoutes(server, db) {
     const { id } = req.params
 
     await db.run("DELETE FROM modelos WHERE id = ?", [id])
-    
+
     return reply.send({ message: "Modelo deletado com sucesso" });
 
   })

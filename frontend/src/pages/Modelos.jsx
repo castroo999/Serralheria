@@ -7,23 +7,28 @@ export default function Modelos() {
   const [itens, setItens] = useState([]);
   const [nomeItem, setNomeItem] = useState("");
   const [precoItem, setPrecoItem] = useState("");
-  const [modelos, setModelos] = useState([])
-
+  const [modelos, setModelos] = useState([]);
+  const [editandoId, setEditandoId] = useState(null);
   const total = itens.reduce((acc, item) => acc + Number(item.preco), 0);
+
+  function abrirEdicao(modelo) {
+    setEditandoId(modelo.id);
+    setTitle(modelo.title);
+    setItens(modelo.itens);
+  }
 
   useEffect(() => {
     async function carregarModelos() {
-        try{
-            const response = await api.get('/modelos')
-            setModelos(response.data)
-        }
-        catch (error){
-            console.log(error)
-        }
+      try {
+        const response = await api.get("/modelos");
+        setModelos(response.data);
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     carregarModelos();
-  }, [])
+  }, []);
 
   async function deletarModelo(id) {
     try {
@@ -33,6 +38,29 @@ export default function Modelos() {
     } catch (error) {
       console.log(error);
       alert("Erro ao deletar modelo");
+    }
+  }
+
+  async function salvarComoCopia(modelo) {
+    try {
+      const response = await api.post("/modelos", {
+        title: modelo.title + " (cópia)",
+        itens: modelo.itens,
+      });
+
+      setModelos((prev) => [
+        ...prev,
+        {
+          id: response.data.id,
+          title: modelo.title + " (cópia)",
+          itens: modelo.itens,
+        },
+      ]);
+
+      alert("Modelo duplicado com sucesso!");
+    } catch (error) {
+      console.log(error);
+      alert("Erro ao duplicar modelo");
     }
   }
 
@@ -53,39 +81,51 @@ export default function Modelos() {
   async function modelo(e) {
     e.preventDefault();
 
-    console.log("ENVIANDO:", { title, itens });
-
     try {
-      const response = await api.post("/modelos", {
-        title,
-        itens,
-      });
-
-      alert("Modelo criado com sucesso!");
-
-      // adiciona na lista sem precisar recarregar
-      setModelos((prev) => [
-        ...prev,
-        {
-          id: response.data.id,
+      if (editandoId) {
+        // EDITAR
+        await api.put(`/modelos/${editandoId}`, {
           title,
           itens,
-        },
-      ]);
+        });
 
-      
+        setModelos((prev) =>
+          prev.map((m) => (m.id === editandoId ? { ...m, title, itens } : m)),
+        );
+
+        alert("Modelo atualizado!");
+        setEditandoId(null);
+      } else {
+        // CRIAR
+        const response = await api.post("/modelos", {
+          title,
+          itens,
+        });
+
+        setModelos((prev) => [
+          ...prev,
+          {
+            id: response.data.id,
+            title,
+            itens,
+          },
+        ]);
+
+        alert("Modelo criado com sucesso!");
+      }
+
       setTitle("");
       setItens([]);
     } catch (error) {
       console.log(error);
-      alert("Erro ao criar modelo");
+      alert("Erro ao salvar modelo");
     }
   }
 
   return (
     <div className="container">
       <form onSubmit={modelo}>
-        <h2>Criar Modelo</h2>
+        <h2>{editandoId ? "Editar Modelo" : "Criar Modelo"}</h2>
 
         <input
           placeholder="Título..."
@@ -111,7 +151,7 @@ export default function Modelos() {
 
         <ul className="itens">
           {itens.map((item, index) => (
-            <li key={index}>
+            <li key={item.nome + index}>
               {item.nome} - R${item.preco}
             </li>
           ))}
@@ -119,9 +159,10 @@ export default function Modelos() {
 
         <div className="total">Total: R$ {total}</div>
 
-        <button type="submit">Salvar Modelo</button>
+        <button type="submit">
+          {editandoId ? "Atualizar Modelo" : "Salvar Modelo"}
+        </button>
       </form>
-
 
       <div className="lista-modelos">
         <h2>Modelos Salvos</h2>
@@ -132,15 +173,26 @@ export default function Modelos() {
 
             <ul>
               {modelo.itens.map((item, index) => (
-                <li key={index}>
+                <li key={item.nome + index}>
                   {item.nome} - R${item.preco}
                 </li>
               ))}
             </ul>
 
-            <button  className="btn-deletar" onClick={() => deletarModelo(modelo.id)}>
-              Deletar
-            </button>
+            <div className="botoes-modelo">
+              <button onClick={() => abrirEdicao(modelo)}>Editar</button>
+
+              <button onClick={() => salvarComoCopia(modelo)}>
+                Salvar como cópia
+              </button>
+
+              <button
+                className="btn-deletar"
+                onClick={() => deletarModelo(modelo.id)}
+              >
+                Deletar
+              </button>
+            </div>
           </div>
         ))}
       </div>
